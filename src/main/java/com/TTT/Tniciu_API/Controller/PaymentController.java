@@ -33,6 +33,9 @@ public class PaymentController {
 
     @PostMapping("/create-payment")
     public String createPayment(@RequestBody Order order) throws UnsupportedEncodingException {
+        // Kiểm tra số lượng hàng tồn kho trước khi tạo URL thanh toán
+        orderService.checkProductQuantities(order);
+
         String vnp_Version = "2.1.0";
         String vnp_Command = "pay";
         String orderType = "other";
@@ -141,6 +144,7 @@ public class PaymentController {
                 String vnp_TxnRef = vnp_Params.get("vnp_TxnRef");
                 Order order = orderService.getOrderByTxnRef(vnp_TxnRef);
                 if (order != null) {
+                    // Không set paymentStatus ở đây nữa, để OrderService xử lý
                     Order createdOrder = orderService.createOrder(order);
 
                     // Create and configure ObjectMapper

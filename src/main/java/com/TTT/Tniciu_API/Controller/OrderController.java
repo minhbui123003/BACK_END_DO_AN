@@ -15,7 +15,7 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
-    @GetMapping 
+    @GetMapping
     public List<Order> getAllOrders() {
         return orderService.getAllOrders();
     }
@@ -32,12 +32,12 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<Order> createOrder(@RequestBody Order order) {
+    public ResponseEntity<?> createOrder(@RequestBody Order order) {
         try {
             Order createdOrder = orderService.createOrder(order);
             return ResponseEntity.ok(createdOrder);
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
